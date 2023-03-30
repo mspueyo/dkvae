@@ -1,0 +1,6 @@
+# DATA
+data/*
+sequencer/
+sequencer/*
+__pycache__/*
+*/__pycache__/*
