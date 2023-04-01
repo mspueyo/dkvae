@@ -1,6 +1,9 @@
-# DATA
+data/
 data/*
+log/
+log/*
 sequencer/
 sequencer/*
 __pycache__/*
 */__pycache__/*
+.vscode
