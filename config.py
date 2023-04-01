@@ -9,7 +9,6 @@ SAMPLE_LEN = int(SAMPLE_DUR*SAMPLE_RATE)
 # DATASET
 
 BUFFER_SIZE = 32
-LABELS = ['hardness', 'depth', 'brightness', 'roughness', 'warmth', 'sharpness', 'boominess']
 DATA_PATH = "data"
 SAMPLE_DATA_FILE = "samples.csv"
 OUT_BANK_PREFIX = "_"
