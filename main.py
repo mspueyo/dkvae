@@ -2,7 +2,7 @@ import logging
 import os
 import datetime as dt
 
-from bin.bank import Bank
+from src.bank import Bank
 
 
 bank_id = "test_bank_big"
