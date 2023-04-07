@@ -59,7 +59,7 @@ class Bank:
         logging.debug(f"Found {len(instruments)} instruments: {instruments}")
         
         # Make destination bank for processed files
-        dst = os.path.join(DATA_PATH, "{}{}".format(id, OUT_BANK_PREFIX))
+        dst = os.path.join(DATA_PATH, "{}{}".format(id, OUT_BANK_SUFFIX))
         logging.debug(f"Creating destination bank {dst}...")
         if not os.path.exists(dst):
             os.makedirs(dst)

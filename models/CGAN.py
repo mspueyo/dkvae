@@ -37,6 +37,7 @@ class DCGAN:
             layers.Conv2D(1, (7, 7), padding="same", activation="sigmoid"),
         ], name="generator")
         
+
     def build_discriminator(self, discriminator_in_channels):
         self.discriminator = keras.Sequential([
             keras.layers.InputLayer((28, 28, discriminator_in_channels)),
@@ -47,6 +48,7 @@ class DCGAN:
             layers.GlobalMaxPooling2D(),
             layers.Dense(1)
         ], name="discriminator")
+
 
     def define_gan(self):
         self.discriminator.trainable = False

@@ -4,8 +4,8 @@ log/
 log/*
 sequencer/
 sequencer/*
+.vscode
 __pycache__/*
 */__pycache__/*
-.vscode
 beatai.egg-info/*
 */beatai.egg-info/*

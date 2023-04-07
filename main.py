@@ -1,12 +1,9 @@
 import logging
-import configparser
 import os
 import datetime as dt
 
+from config import *
 from src.bank import Bank
-
-
-bank_id = "test_bank_big"
 
 
 def main():
@@ -15,8 +12,8 @@ def main():
         """
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-    logging.info("Reading bank '{}'".format(bank_id))
-    bank = Bank(bank_id)
+    logging.info("Reading bank '{}'".format(BANK_ID))
+    bank = Bank(BANK_ID)
 
 
 def init_logs():
