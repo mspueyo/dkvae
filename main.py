@@ -1,4 +1,5 @@
 import logging
+import configparser
 import os
 import datetime as dt
 
@@ -34,11 +35,9 @@ def init_logs():
     formatter = logging.Formatter('%(module)s:%(funcName)s: %(levelname)s: %(message)s')
     console.setFormatter(formatter)
     logging.getLogger().addHandler(console)
-
     
 
 if __name__ == "__main__":
-
     init_logs()
 
     logging.info("8 888888888o   8 8888888888            .8.    8888888 8888888888 ,o888888o.    8 888888888o 8888888 8888888888 ")
@@ -52,6 +51,7 @@ if __name__ == "__main__":
     logging.info("8 8888    ,88' 8 8888          .888888888. `88888.  8 8888      8888     ,88'  8 8888             8 8888       ")
     logging.info("8 888888888P   8 888888888888 .8'       `8. `88888. 8 8888       `8888888P'    8 8888             8 8888       ")
 
+    logging.info("Initializing main...")
     try:
         main()
     except Exception as e:

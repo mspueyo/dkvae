@@ -45,7 +45,10 @@ class Bank:
     
     @staticmethod
     def get_dirs(id):
-        """Retrieves file and destination folders based on id. Raises exception if bank not found."""
+        """Retrieves file and destination folders based on id. Raises exception if bank not found.
+        Returns:
+        :src: original directory.
+        :dst: destination directory."""
         # Source bank
         src = os.path.join(DATA_PATH, id)
         logging.debug(f"Seeking source bank {src}")
@@ -100,6 +103,7 @@ class Bank:
     
     @staticmethod
     def match_length(audio):
+        """Matches audio length to config file."""
         if len(audio) > SAMPLE_LEN:
             return audio[0:SAMPLE_LEN]
         elif len(audio) < SAMPLE_LEN:
@@ -108,6 +112,7 @@ class Bank:
     
     
     def dump_data(self):
+        """Saves sample data to csv."""
         data_df = pd.DataFrame(self.data)
         dst_file = os.path.join(self.dir, SAMPLE_DATA_FILE)
         logging.debug(f"Saving data to {dst_file}")
@@ -115,6 +120,7 @@ class Bank:
         
         
     def is_processed(self):
+        """Checks if sample file has already been processed and all files stored in csv exists."""
         data_df_path = os.path.join(self.dir, SAMPLE_DATA_FILE)
         if os.path.exists(data_df_path):
             self.data = pd.read_csv(data_df_path)
@@ -126,14 +132,17 @@ class Bank:
 
 
     def read_data(self):
+        """Loads sample data file."""
         file = os.path.join(self.dir, SAMPLE_DATA_FILE)
         logging.debug(f"Reading data from {file}...")
         self.data = pd.read_csv(file)
 
     
     def read_dataset(self):
+        """Reads tensorflow dataset."""
         logging.info("Loading audio dataset...")
         dataset = audio_dataset_from_directory(
             directory=self.dir,
             seed=42)
-        print(dataset.directory)
+        logging.info("Loaded Audio dataset.")
+        logging.debug(f'Audio dataset contains {dataset.element_spec} elements.')
