@@ -4,6 +4,8 @@ import datetime as dt
 
 from config import *
 from src.bank import Bank
+from src.models.autoencoder import Autoencoder
+from src.models.variationalautoencoder import VariationalAutoencoder
 
 
 def main():
@@ -14,17 +16,26 @@ def main():
 
     logging.info("Reading bank '{}'".format(BANK_ID))
     bank = Bank(BANK_ID)
+    autoencoder = Autoencoder(
+        input_shape = AE_INPUT_SHAPE,
+        filters = AE_CONV_FILTERS,
+        kernels = AE_CONV_KERNELS,
+        strides = AE_CONV_STRIDES,
+        latent_space_shape = AE_LATENT_SPACE_SHAPE
+        )
 
 
 def init_logs():
     """Inits logging."""
     if not os.path.exists("log/"):
         os.mkdir("log/")
+    if not os.path.exists(f"log/{dt.datetime.now().strftime('%Y%m%d')}/"):
+        os.mkdir(f"log/{dt.datetime.now().strftime('%Y%m%d')}/")
     
     # Log to file
     logging.basicConfig(level=logging.DEBUG,
-                        format='[%(asctime)s] %(levelname)s: %(module)s:%(funcName)s: %(message)s',
-                        filename=f"log/log_{dt.datetime.now().strftime('%Y%m%d_%H%M%S')}.txt")
+                        format="[%(asctime)s] %(levelname)s: %(module)s:%(funcName)s: %(message)s \t",
+                        filename=f"log/{dt.datetime.now().strftime('%Y%m%d')}/debug_{dt.datetime.now().strftime('%H%M%S')}.txt")
     
     # Log to screen
     console = logging.StreamHandler()
@@ -53,4 +64,4 @@ if __name__ == "__main__":
         main()
     except Exception as e:
         logging.critical(f'Catched exception {e}')
-        raise Exception
+        raise e

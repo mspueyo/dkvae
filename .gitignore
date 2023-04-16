@@ -2,8 +2,6 @@ data/
 data/*
 log/
 log/*
-sequencer/
-sequencer/*
 .vscode
 __pycache__/*
 */__pycache__/*

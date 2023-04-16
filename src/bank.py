@@ -1,10 +1,12 @@
 import os
 import logging
+import random
 
 import librosa
 import soundfile as sf
 import numpy as np
 import pandas as pd
+import tensorflow as tf
 
 from keras.utils import audio_dataset_from_directory
 
@@ -23,12 +25,11 @@ class Bank:
     """
     
     
-    def __init__(self, id):
+    def __init__(self, id, to_spec=True):
         """Creates Audio object
         :param id: bank name (Subfolder dir name)"""
         self.id = id
-        self.original_dir, self.dir, self.instruments = Bank.get_dirs(id)
-        logging.info(f"Processing dataset {self.id}...")
+        self.get_dirs()
         if not self.is_processed():
             logging.info(f"{self.id} Not processed. Processing bank...")
             self.data = []
@@ -40,33 +41,33 @@ class Bank:
         logging.info(f"Reading dataset {self.id}...")
         self.read_dataset()
 
-        
     
-    
-    @staticmethod
-    def get_dirs(id):
+    def get_dirs(self):
         """Retrieves file and destination folders based on id. Raises exception if bank not found.
         Returns:
         :src: original directory.
         :dst: destination directory."""
         # Source bank
-        src = os.path.join(DATA_PATH, id)
-        logging.debug(f"Seeking source bank {src}")
+        src = os.path.join(DATA_PATH, self.id)
+        logging.info(f"Seeking source bank {src}")
         if not os.path.exists(src):
             raise Exception(f"Source bank {src} does not exist.")
         
         instruments = [x for x in os.listdir(src) if os.path.isdir(os.path.join(src, x))]
-        logging.debug(f"Found {len(instruments)} instruments: {instruments}")
+        logging.info(f"Found {len(instruments)} instruments: {instruments}")
         
         # Make destination bank for processed files
-        dst = os.path.join(DATA_PATH, "{}{}".format(id, OUT_BANK_SUFFIX))
-        logging.debug(f"Creating destination bank {dst}...")
+        dst = os.path.join(DATA_PATH, "{}{}".format(self.id, OUT_BANK_SUFFIX))
+        logging.info(f"Creating destination bank {dst}...")
+        train_seq = ['test', 'train', 'val']
         if not os.path.exists(dst):
             os.makedirs(dst)
-            for inst in instruments:
-                os.makedirs(os.path.join(dst, inst))
-        
-        return src, dst, instruments
+            for t in train_seq:
+                    for inst in instruments:
+                        os.makedirs(os.path.join(dst, t, inst))
+        self.original_dir = src
+        self.dir = dst
+        self.instruments = instruments
     
     
     def preprocess_wav_files(self):
@@ -74,11 +75,20 @@ class Bank:
         for inst in self.instruments:
             # Local directories for each sample
             src_dir = os.path.join(self.original_dir, inst)
-            dst_dir = os.path.join(self.dir, inst)
             for file in os.listdir(src_dir):
                 if file.endswith('.wav'):
                     # Local sample name
                     src_file = os.path.join(src_dir, file)
+
+                    # Train, Test, Validation Split
+                    rnd = random.random()
+                    if rnd <= VAL_SIZE:
+                        split = 'val'
+                    elif rnd <= VAL_SIZE + TEST_SIZE:
+                        split = 'test'
+                    else:
+                        split = 'train'
+                    dst_dir = os.path.join(self.dir, split, inst)
                     dst_file = os.path.join(dst_dir, file)
                     # Load file
                     logging.debug(f"Preprocessing {src_file}...")
@@ -97,7 +107,8 @@ class Bank:
                             "sample": file,
                             "path": dst_file,
                             "original_path": src_file,
-                            "label": inst
+                            "label": inst,
+                            "split": split
                         })
     
     
@@ -109,13 +120,18 @@ class Bank:
         elif len(audio) < SAMPLE_LEN:
             return np.pad(audio, (0, SAMPLE_LEN-len(audio)), constant_values=.0)
         return audio
+
+    @staticmethod
+    def squeeze(audio, labels):
+        audio = tf.squeeze(audio, axis=-1)
+        return audio, labels
     
     
     def dump_data(self):
         """Saves sample data to csv."""
         data_df = pd.DataFrame(self.data)
         dst_file = os.path.join(self.dir, SAMPLE_DATA_FILE)
-        logging.debug(f"Saving data to {dst_file}")
+        logging.info(f"Saving data to {dst_file}")
         data_df.to_csv(dst_file, index=False)
         
         
@@ -140,9 +156,13 @@ class Bank:
     
     def read_dataset(self):
         """Reads tensorflow dataset."""
-        logging.info("Loading audio dataset...")
-        dataset = audio_dataset_from_directory(
-            directory=self.dir,
-            seed=42)
-        logging.info("Loaded Audio dataset.")
-        logging.debug(f'Audio dataset contains {dataset.element_spec} elements.')
+        logging.info("Loading train dataset...")
+        self.train_ds = audio_dataset_from_directory(directory=os.path.join(self.dir, 'train'), seed=42, output_sequence_length=SAMPLE_LEN)
+        logging.info("Loading test dataset...")
+        self.test_ds = audio_dataset_from_directory(directory=os.path.join(self.dir, 'test'), seed=42, output_sequence_length=SAMPLE_LEN)
+        logging.info("Loading val dataset...")
+        self.val_ds = audio_dataset_from_directory(directory=os.path.join(self.dir, 'val'), seed=42, output_sequence_length=SAMPLE_LEN)
+
+        self.train_ds = self.train_ds.map(Bank.squeeze, tf.data.AUTOTUNE)
+        self.test_ds = self.test_ds.map(Bank.squeeze, tf.data.AUTOTUNE)
+        self.val_ds = self.val_ds.map(Bank.squeeze, tf.data.AUTOTUNE)
