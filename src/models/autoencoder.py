@@ -105,7 +105,7 @@ class Autoencoder:
 
     def build_autoencoder(self):
         model_output = self.decoder(self.encoder(self.input))
-        self.model = Model(self.input, model_output)
+        self.model = Model(self.input, model_output, name="autoencoder")
 
         logging.info("Model built.")
         self.model.summary(print_fn=logging.debug)

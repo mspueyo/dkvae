@@ -16,6 +16,19 @@ from config import AE_LOSS_WEIGHT
 tf.compat.v1.disable_eager_execution()
 
 
+def compute_loss(y_target, y_predicted):
+    error = y_target - y_predicted
+    reconstruction_loss = K.mean(K.square(error), axis=[1, 2, 3])
+    return reconstruction_loss
+
+
+def compute_kl_loss(model):
+    def _compute_kl_loss(*args):
+        kl_loss = -0.5 * K.sum(1 + model.sigma - K.square(model.mu) -  K.exp(model.sigma), axis=1)
+        return kl_loss
+    return _compute_kl_loss
+
+
 class VariationalAutoencoder:
     """
     Variational Autoencoder (VAE) architecture.
@@ -69,8 +82,7 @@ class VariationalAutoencoder:
         self.shape_before_ls = K.int_shape(x)[1:]
         x = Flatten()(x)
         self.mu = Dense(self.latent_space_shape, name="mu")(x)
-        self.sigma = Dense(self.latent_space_shape, name="sigma")(x)
-        
+        self.sigma = Dense(self.latent_space_shape, name="sigma")(x)        
 
         def normal_distribution(args):
             mu, sigma = args
@@ -120,7 +132,7 @@ class VariationalAutoencoder:
 
     def build_vae(self):
         model_output = self.decoder(self.encoder(self.input))
-        self.model = Model(self.input, model_output)
+        self.model = Model(self.input, model_output, name="variational_autoencoder")
 
         logging.info("Model built.")
         self.model.summary(print_fn=logging.debug)
@@ -128,7 +140,7 @@ class VariationalAutoencoder:
     
     def compile(self, learning_rate=0.0001):
         optimizer = Adam(learning_rate=learning_rate)
-        self.model.compile(optimizer=optimizer, loss=self.compute_combined_loss, metrics=[self.compute_combined_loss, self.compute_kl_loss])
+        self.model.compile(optimizer=optimizer, loss=self.compute_combined_loss, metrics=[compute_loss, compute_kl_loss(self)])
 
 
     def train(self, x_train, y_train, batch_size, num_epochs):
@@ -139,22 +151,11 @@ class VariationalAutoencoder:
 
 
     def compute_combined_loss(self, y_target, y_predicted):
-        loss = self.compute_loss(y_target, y_predicted)
-        kl_loss = self.compute_kl_loss(y_target, y_predicted)
+        loss = compute_loss(y_target, y_predicted)
+        kl_loss = compute_kl_loss(self)()
 
         loss_combined = AE_LOSS_WEIGHT*loss + kl_loss
         return loss_combined
-        
-    
-    def compute_loss(self, y_target, y_predicted):
-        error = y_target - y_predicted
-        loss = K.mean(K.square(error), axis=[1, 2, 3])
-        return loss
-    
-
-    def compute_kl_loss(self, y_target, y_predicted):
-        kl_loss = -0.5 * K.sum(1 + self.sigma - K.square(self.mu) - K.exp(self.sigma), axis=1)
-        return kl_loss
 
 
     def save(self, folder="."):
