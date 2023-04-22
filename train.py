@@ -30,7 +30,7 @@ def train(x_train, y_train, learning_rate, batch_size, epochs):
 
 if __name__ == "__main__":
     x_train, y_train, _, _ = load_mnist()
-    autoencoder = train(x_train[:1000], y_train[:1000], AE_LEARNING_RATE, AE_BATCH_SIZE, AE_EPOCHS)
+    autoencoder = train(x_train[:1000], x_train[:1000], AE_LEARNING_RATE, AE_BATCH_SIZE, AE_EPOCHS)
     autoencoder.save("model")
     autoencoder2 = VariationalAutoencoder.load("model")
     autoencoder2.model.summary()
