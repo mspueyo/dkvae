@@ -1,9 +1,12 @@
 data/
 data/*
+
 log/
 log/*
+
+model/
+model/*
+
 .vscode
 __pycache__/*
 */__pycache__/*
-beatai.egg-info/*
-*/beatai.egg-info/*
