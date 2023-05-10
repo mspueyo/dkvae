@@ -16,13 +16,18 @@ def main():
 
     logging.info("Reading bank '{}'".format(BANK_ID))
     bank = Bank(BANK_ID)
-    autoencoder = Autoencoder(
+    autoencoder = VariationalAutoencoder(
         input_shape = AE_INPUT_SHAPE,
         filters = AE_CONV_FILTERS,
         kernels = AE_CONV_KERNELS,
         strides = AE_CONV_STRIDES,
         latent_space_shape = AE_LATENT_SPACE_SHAPE
         )
+    
+    x_train, y_train, x_test, y_test, x_val, y_val = bank.load_spectograms()
+
+    autoencoder.compile(AE_LEARNING_RATE)
+    autoencoder.train(x_train, AE_BATCH_SIZE, AE_EPOCHS)
 
 
 def init_logs():

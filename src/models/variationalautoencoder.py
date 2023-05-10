@@ -9,7 +9,8 @@ from keras import backend as K
 from keras.layers import Input, Conv2D, Conv2DTranspose, ReLU, BatchNormalization, Flatten, Dense, Reshape, Activation, Lambda
 from keras.optimizers import Adam
 from keras.losses import MeanSquaredError
-
+from keras.initializers.initializers_v1 import RandomNormal
+from keras.regularizers import L2
 from config import AE_LOSS_WEIGHT
 
 
@@ -24,7 +25,8 @@ def compute_loss(y_target, y_predicted):
 
 def compute_kl_loss(model):
     def _compute_kl_loss(*args):
-        kl_loss = -0.5 * K.sum(1 + model.sigma - K.square(model.mu) -  K.exp(model.sigma), axis=1)
+        epsilon = 1e-8
+        kl_loss = -0.5 * K.sum(1 + model.sigma - K.square(model.mu) - (K.exp(model.sigma) + epsilon), axis=1)
         return kl_loss
     return _compute_kl_loss
 
@@ -71,6 +73,7 @@ class VariationalAutoencoder:
             conv_layer = Conv2D(
                 filters = self.filters[l],
                 kernel_size = self.kernels[l],
+                kernel_regularizer=L2(1e-4),
                 strides = self.strides[l],
                 padding = 'same',
                 name = f'encoder_conv_layer_{l+1}')
@@ -87,7 +90,7 @@ class VariationalAutoencoder:
         def normal_distribution(args):
             mu, sigma = args
             eps = K.random_normal(shape=K.shape(self.mu), mean=0., stddev=1.)
-            z = mu + K.exp(sigma / 2) * eps
+            z = mu + K.exp((sigma + 1e-8) / 2) * eps
             return z
         x = Lambda(normal_distribution, name="encoder_output")([self.mu, self.sigma])
 
@@ -104,11 +107,12 @@ class VariationalAutoencoder:
 
         # Convolutional Layers
         for l in reversed(range(1, self.n_conv_layers)):
-            conv_trans_layer = conv_trans_layer = Conv2DTranspose(
-                filters = self.filters[l],
+            conv_trans_layer = Conv2DTranspose(
+                filters = 1,
                 kernel_size= self.kernels[l],
                 strides = self.strides[l],
                 padding = "same",
+                kernel_initializer=RandomNormal(stddev=0.01),
                 name = f"decoder_conv_transpose_layer_{self.n_conv_layers-l}")
             x = conv_trans_layer(x)
             x = ReLU(name=f"decoder_relu_{self.n_conv_layers-l}")(x)
@@ -139,12 +143,12 @@ class VariationalAutoencoder:
 
     
     def compile(self, learning_rate=0.0001):
-        optimizer = Adam(learning_rate=learning_rate)
+        optimizer = Adam(learning_rate=learning_rate, clipvalue=1.0)
         self.model.compile(optimizer=optimizer, loss=self.compute_combined_loss, metrics=[compute_loss, compute_kl_loss(self)])
 
 
-    def train(self, x_train, y_train, batch_size, num_epochs):
-        self.model.fit(x_train, y_train,
+    def train(self, x_train, batch_size, num_epochs):
+        self.model.fit(x_train, x_train,
                        batch_size=batch_size,
                        epochs=num_epochs,
                        shuffle=True)
@@ -155,6 +159,8 @@ class VariationalAutoencoder:
         kl_loss = compute_kl_loss(self)()
 
         loss_combined = AE_LOSS_WEIGHT*loss + kl_loss
+        if loss_combined == np.nan or loss_combined is None:
+            tf.print('a')
         return loss_combined
 
 
