@@ -29,7 +29,7 @@ def main():
     x_train, y_train, x_test, y_test, x_val, y_val = bank.load_spectograms()
 
     autoencoder.compile(AE_LEARNING_RATE)
-    autoencoder.train(x_train, AE_BATCH_SIZE, AE_EPOCHS)
+    history = autoencoder.train(x_train, x_test, AE_BATCH_SIZE, AE_EPOCHS)
 
 
 def init_logs():

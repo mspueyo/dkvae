@@ -147,11 +147,13 @@ class VariationalAutoencoder:
         self.model.compile(optimizer=optimizer, loss=self.compute_combined_loss, metrics=[compute_loss, compute_kl_loss(self)])
 
 
-    def train(self, x_train, batch_size, num_epochs):
-        self.model.fit(x_train, x_train,
-                       batch_size=batch_size,
-                       epochs=num_epochs,
-                       shuffle=True)
+    def train(self, x_train, x_test, batch_size, num_epochs):
+        history = self.model.fit(x_train, x_train,
+                    batch_size=batch_size,
+                    epochs=num_epochs,
+                    validation_data=(x_test, x_test),
+                    shuffle=True)
+        return history
 
 
     def compute_combined_loss(self, y_target, y_predicted):
