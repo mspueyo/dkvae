@@ -205,6 +205,12 @@ class Bank:
         return log_spectogram
     
     @staticmethod
+    def spectogram_to_audio(log_spectogram):
+        stft = librosa.db_to_amplitude(log_spectogram)
+        audio = librosa.griffinlim(stft, hop_length=FFT_HOP_LENGTH, n_iter=64)
+        return audio
+    
+    @staticmethod
     def normalize(arr, min, max):
         logging.info("Normalizing spectogram...")
         norm_arr = (arr - arr.min()) / (arr.max() - arr.min())
