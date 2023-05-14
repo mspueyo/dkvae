@@ -28,7 +28,7 @@ class Bank:
         """Creates Audio object
         :param original_dir: path to bank"""
         self.id = original_dir.split('/')[-1]
-        self.get_dirs()
+        self.get_dirs(original_dir)
         if not self.is_processed():
             logging.info(f"{self.id} Not processed. Processing bank...")
             self.df = []
@@ -37,22 +37,24 @@ class Bank:
         else:
             logging.info(f"{self.id} Already processed.")
     
-    def get_dirs(self):
+    def get_dirs(self, original_dir):
         """Retrieves file and destination folders based on id. Raises exception if bank not found.
         Returns:
         :src: original directory.
         :dst: destination directory."""
+        data_path = os.path.dirname(original_dir)
         # Source bank
-        src = os.path.join(DATA_PATH, self.id)
+        src = os.path.join(data_path, self.id)
         logging.info(f"Seeking source bank {src}")
         if not os.path.exists(src):
+            logging.error("The path specified could not be found. If you are running in colab verify that your disk is mounted.")
             raise Exception(f"Source bank {src} does not exist.")
         
         instruments = [x for x in os.listdir(src) if os.path.isdir(os.path.join(src, x))]
         logging.info(f"Found {len(instruments)} instruments: {instruments}")
         
         # Make destination bank for processed files
-        dst = os.path.join(DATA_PATH, "{}{}".format(self.id, OUT_BANK_SUFFIX))
+        dst = os.path.join(data_path, "{}{}".format(self.id, OUT_BANK_SUFFIX))
         logging.info(f"Creating destination bank {dst}...")
         train_seq = ['test', 'train', 'val']
         if not os.path.exists(dst):

@@ -7,6 +7,8 @@ from src.bank import Bank
 from src.models.autoencoder import Autoencoder
 from src.models.variationalautoencoder import VariationalAutoencoder
 
+BANK_PATH = "data/test_bank_big"
+
 
 def main():
     """Main workflow of the program.
@@ -14,8 +16,8 @@ def main():
         """
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-    logging.info("Reading bank '{}'".format(BANK_ID))
-    bank = Bank(BANK_ID)
+    logging.info("Reading bank '{}'".format(BANK_PATH))
+    bank = Bank(BANK_PATH)
     autoencoder = VariationalAutoencoder(
         input_shape = AE_INPUT_SHAPE,
         filters = AE_CONV_FILTERS,
