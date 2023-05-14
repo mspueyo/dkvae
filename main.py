@@ -7,14 +7,14 @@ from src.bank import Bank
 from src.models.autoencoder import Autoencoder
 from src.models.variationalautoencoder import VariationalAutoencoder
 
-BANK_PATH = "data/test_bank_big"
+BANK_PATH = "data/sample_pack"
 
 
 def main():
     """Main workflow of the program.
         - Reads bank passed as bank_id
         """
-    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+    #os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
     logging.info("Reading bank '{}'".format(BANK_PATH))
     bank = Bank(BANK_PATH)
