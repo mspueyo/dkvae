@@ -24,10 +24,10 @@ class Bank:
         data:           DataFrame containing sample information.
     """
     
-    def __init__(self, id, to_spec=True):
+    def __init__(self, original_dir, to_spec=True):
         """Creates Audio object
-        :param id: bank name (Subfolder dir name)"""
-        self.id = id
+        :param original_dir: path to bank"""
+        self.id = original_dir.split('/')[-1]
         self.get_dirs()
         if not self.is_processed():
             logging.info(f"{self.id} Not processed. Processing bank...")
