@@ -28,7 +28,7 @@ MarkupSafe==2.1.2
 ml-dtypes==0.0.4
 msgpack==1.0.5
 munkres==1.1.4
-numba==0.56.4
+numba==0.57.0
 numpy==1.24.3
 oauthlib==3.2.2
 opt-einsum==3.3.0
