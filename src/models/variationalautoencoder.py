@@ -148,11 +148,12 @@ class VariationalAutoencoder:
 
 
     def train(self, x_train, x_test, batch_size, num_epochs):
-        checkpoint = ModelCheckpoint('model-{epoch:03d}.h5', verbose=1, monitor='val_loss',save_best_only=True, mode='auto') 
+        checkpoint = ModelCheckpoint('/content/drive/MyDrive/model-hist/model-{epoch:03d}.h5', verbose=1, monitor='val_loss', period=1) 
         history = self.model.fit(x_train, x_train,
                     batch_size=batch_size,
                     epochs=num_epochs,
                     validation_data=(x_test, x_test),
+                    callbacks=[checkpoint]
                     shuffle=True)
         return history
 
