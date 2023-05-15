@@ -153,7 +153,7 @@ class VariationalAutoencoder:
                     batch_size=batch_size,
                     epochs=num_epochs,
                     validation_data=(x_test, x_test),
-                    callbacks=[checkpoint]
+                    callbacks=[checkpoint],
                     shuffle=True)
         return history
 
