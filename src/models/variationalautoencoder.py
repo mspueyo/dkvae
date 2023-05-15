@@ -6,9 +6,9 @@ import numpy as np
 import tensorflow as tf
 from keras import Model
 from keras import backend as K
+from keras.callbacks import ModelCheckpoint
 from keras.layers import Input, Conv2D, Conv2DTranspose, ReLU, BatchNormalization, Flatten, Dense, Reshape, Activation, Lambda
 from keras.optimizers import Adam
-from keras.losses import MeanSquaredError
 from keras.initializers.initializers_v1 import RandomNormal
 from keras.regularizers import L2
 from config import AE_LOSS_WEIGHT
@@ -148,6 +148,7 @@ class VariationalAutoencoder:
 
 
     def train(self, x_train, x_test, batch_size, num_epochs):
+        checkpoint = ModelCheckpoint('model-{epoch:03d}.h5', verbose=1, monitor='val_loss',save_best_only=True, mode='auto') 
         history = self.model.fit(x_train, x_train,
                     batch_size=batch_size,
                     epochs=num_epochs,
