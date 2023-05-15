@@ -86,7 +86,7 @@ class Bank:
                     try:
                         sample, _ = librosa.load(src_file, sr=SAMPLE_RATE, mono=True, dtype=np.float64)
                     except Exception:
-                        logging.warning(f"{file} could not be loaded. Skipping file.")
+                        logging.warning(f"{file} could not be loaded from {src_file}. Skipping file.")
                     else:
                         # Pre process
                         sample = np.trim_zeros(sample, trim='f')  # Remove leading zeros
