@@ -30,7 +30,6 @@ ml-dtypes==0.0.4
 msgpack==1.0.5
 munkres==1.1.4
 numba==0.57.0
-numpy==1.23.5
 oauthlib==3.2.2
 opt-einsum==3.3.0
 pandas==1.5.3
