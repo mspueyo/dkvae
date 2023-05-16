@@ -71,6 +71,7 @@ class Bank:
         for inst in self.instruments:
             # Local directories for each sample
             src_dir = os.path.join(self.original_dir, inst)
+            count=0
             for file in os.listdir(src_dir):
                 if file.endswith('.wav'):
                     # Local sample name
@@ -79,7 +80,7 @@ class Bank:
                     # Train, Test, Validation Split
                     split = self.test_train_val()
                     dst_dir = os.path.join(self.dir, split, inst)
-                    dst_file = os.path.join(dst_dir, f"{file.split('.')[0]}.npy")
+                    dst_file = os.path.join(dst_dir, f"{inst}{count}.npy")
 
                     # Load file
                     logging.debug(f"Preprocessing {src_file}...")
@@ -107,11 +108,12 @@ class Bank:
                                 "min_value": log_spectogram.min(),
                                 "max_value": log_spectogram.max()
                             })
+                            count += 1
         self.df = pd.DataFrame(self.df)
 
-    def dump_data(self):
+    def dump_data(self, name):
         """Saves sample data to csv."""
-        dst_file = os.path.join(self.dir, SAMPLE_DATA_FILE)
+        dst_file = os.path.join(self.dir, name)
         logging.info(f"Saving data to {dst_file}")
         self.df.to_csv(dst_file, index=False)
            
