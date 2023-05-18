@@ -14,4 +14,9 @@ data/test_bank_big/*
 data/test_bank_big_/*
 data/test_bank_big_/*/*
 
+data/kick_bank/*
+data/kick_bank_/*
+data/kick_bank_/*/*
+
 data/sample_bank_/*/*
+

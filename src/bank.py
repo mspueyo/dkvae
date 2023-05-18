@@ -111,9 +111,9 @@ class Bank:
                             count += 1
         self.df = pd.DataFrame(self.df)
 
-    def dump_data(self, name):
+    def dump_data(self):
         """Saves sample data to csv."""
-        dst_file = os.path.join(self.dir, name)
+        dst_file = os.path.join(self.dir, SAMPLE_DATA_FILE)
         logging.info(f"Saving data to {dst_file}")
         self.df.to_csv(dst_file, index=False)
            

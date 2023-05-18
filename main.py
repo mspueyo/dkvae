@@ -7,7 +7,7 @@ from src.bank import Bank
 from src.models.autoencoder import Autoencoder
 from src.models.variationalautoencoder import VariationalAutoencoder
 
-BANK_PATH = "data/sample_bank"
+BANK_PATH = "data/kick_bank"
 
 
 def main():
