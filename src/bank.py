@@ -93,7 +93,7 @@ class Bank:
                         sample = np.trim_zeros(sample, trim='f')  # Remove leading zeros
                         sample = Bank.match_length(sample) # Make all samples equal length
                         log_spectogram = Bank.get_log_spectogram(sample)
-                        normalized_spectogram = Bank.normalize(log_spectogram, 0, 1)
+                        normalized_spectogram = Bank.normalize(log_spectogram)
                         # Save file
                         if log_spectogram.min() != log_spectogram.max():
                             logging.info("Saving file...")
@@ -215,8 +215,7 @@ class Bank:
         return audio
     
     @staticmethod
-    def normalize(arr, min, max):
+    def normalize(arr):
         logging.info("Normalizing spectogram...")
         norm_arr = (arr - arr.min()) / (arr.max() - arr.min())
-        norm_arr = norm_arr * (max - min) + min
         return norm_arr
