@@ -1,6 +1,6 @@
 # DK·VAE
 
-DK·VAE (Drumkit Variational Autoencoder) is an audio generation tool based on variational autoencoders. It has been developed as a final thesis for the Data Science master's degree at UOC (Universitat Oberta de Catalunya).
+DK·VAE (Drumkit Variational Autoencoder) is an audio generation tool based on variational autoencoders. It has been developed as a final thesis for the Data Science MSc degree at UOC (Universitat Oberta de Catalunya).
 
 The DKVAE project uses a Variational Autoencoder (VAE), a type of generative model, to learn a compact, continuous representation of drum sounds. The model is trained on a large dataset of drum sounds, and it can generate novel drum sounds that are similar to the training data. DrumKitVAE can be seen as a drum machine that has the ability to generate an infinite number of unique drum sounds, adding creativity and versatility to your music production process.
 
