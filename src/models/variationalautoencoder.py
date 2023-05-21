@@ -26,8 +26,8 @@ def compute_loss(y_target, y_predicted):
 def compute_kl_loss(model):
     def _compute_kl_loss(*args):
         epsilon = 1e-8
-        kl_loss = -0.5 * K.sum(1 + model.sigma - K.square(model.mu) - (K.exp(model.sigma) + epsilon), axis=1)
-        return np.abs(kl_loss)
+        kl_loss = K.abs(-0.5 * K.sum(1 + model.sigma - K.square(model.mu) - (K.exp(model.sigma) + epsilon), axis=1))
+        return kl_loss
     return _compute_kl_loss
 
 
