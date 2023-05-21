@@ -161,9 +161,7 @@ class VariationalAutoencoder:
         loss = compute_loss(y_target, y_predicted)
         kl_loss = compute_kl_loss(self)()
 
-        loss_combined = loss + AE_LOSS_WEIGHT*kl_loss
-        if loss_combined == np.nan or loss_combined is None:
-            tf.print('a')
+        loss_combined = loss + AE_LOSS_WEIGHT * kl_loss
         return loss_combined
 
 
