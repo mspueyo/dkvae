@@ -20,3 +20,6 @@ data/kick_bank_/*/*
 
 data/sample_bank_/*/*
 
+notebooks/
+notebooks/*
+
