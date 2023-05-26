@@ -7,6 +7,18 @@ The DKVAE project uses a Variational Autoencoder (VAE), a type of generative mod
 
 # Table of Contents
 
+- [Installation](#installation)
+  * [Requirements](#requirements)
+  * [Notebook](#notebook)
+  * [Installation](#installation-1)
+- [Implementation](#implementation)
+  * [Bank](#bank)
+  * [Variational Autoencoder Model](#variational-autoencoder-model)
+  * [Autoencoder Model](#autoencoder-model)
+  * [CGAN Model](#cgan-model)
+- [Dataset](#dataset)
+- [Results](#results)
+
 
 # Installation
 
