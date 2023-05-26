@@ -7,24 +7,12 @@ The DKVAE project uses a Variational Autoencoder (VAE), a type of generative mod
 
 # Table of Contents
 
-- [DK·VAE](#dk-vae)
-- [Table of Contents](#table-of-contents)
-- [Installation](#installation)
-  * [Requirements](#requirements)
-  * [Notebook](#notebook)
-  * [Installation](#installation-1)
-- [Implementation](#implementation)
-  * [Project Structure](#project-structure)
-  * [DCGAN Architecture](#dcgan-architecture)
-  * [VAE Architecture](#vae-architecture)
-- [Dataset](#dataset)
-- [Results](#results)
-  * [Performance](#performance)
 
 # Installation
 
 ## Requirements
-DKVAE uses 
+DKVAE depends on the following libraries:
+
 
 ## Notebook
 You can try DKVAE online with no installation on the following Google Colab notebook.
@@ -32,6 +20,10 @@ You can try DKVAE online with no installation on the following Google Colab note
 ## Installation
 
 Alternatively, the package can be installed locally by running the following comand:
+
+```
+pip install https://github.com/user/repo.git
+```
 
 # Implementation
 
