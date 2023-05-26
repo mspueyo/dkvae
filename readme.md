@@ -22,7 +22,7 @@ You can try DKVAE online with no installation on the following Google Colab note
 Alternatively, the package can be installed locally by running the following comand:
 
 ```
-pip install https://github.com/user/repo.git
+pip install https://github.com/mspueyo/dkvae.git
 ```
 
 # Implementation
