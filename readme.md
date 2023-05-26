@@ -153,6 +153,7 @@ The DKVAE model is trained on a comprehensive drum kit dataset that was compiled
 * Cymbals (Ride, Crash)
 * Tom-Toms (High, Mid, Low)
 * Percussion (Clap, Shaker, Tambourine, Cowbell)
+
 Each category has hundreds to thousands of examples, varying in timbre, pitch, length, and other sound characteristics. This diversity in the training data allows the DKVAE model to capture a wide range of drum sound features in its latent space, and to generate a diverse range of novel drum sounds.
 
 The audio files in the dataset are .wav files. They were processed into a more machine-learning-friendly format during the preprocessing step, where each audio file was converted to mono and then into a log spectrogram using Short-Time Fourier Transform (STFT). These spectrograms capture the frequency content of the drum sounds over time and provide a compact representation that is suitable for training our model.
