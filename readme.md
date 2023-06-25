@@ -24,7 +24,12 @@ The DKVAE project uses a Variational Autoencoder (VAE), a type of generative mod
 
 ## Requirements
 DKVAE depends on the following libraries:
-
+* keras==2.12.0
+* librosa==0.10.0
+* numpy==1.22.4
+* pandas==1.5.3
+* soundfile==0.12.1
+* tensorflow==2.12.0
 
 ## Notebook
 You can try DKVAE online with no installation on the following Google Colab notebook.
